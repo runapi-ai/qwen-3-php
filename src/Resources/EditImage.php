@@ -10,7 +10,6 @@ use RunApi\Core\RequestOptions;
 use RunApi\Core\Resources\TypedConfiguredResource;
 use RunApi\Qwen3\Models\CompletedImageTaskResponse;
 use RunApi\Qwen3\Models\ImageTaskResponse;
-use RunApi\Qwen3\Types;
 
 /** Image to image operations for Qwen 3. */
 readonly class EditImage extends TypedConfiguredResource
@@ -77,10 +76,8 @@ readonly class EditImage extends TypedConfiguredResource
         return new self(
             $http,
             '/api/v1/qwen_3/edit_image',
-            'qwen-3/edit-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
-            Types::EDIT_IMAGE_MODELS,
             'edit-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,

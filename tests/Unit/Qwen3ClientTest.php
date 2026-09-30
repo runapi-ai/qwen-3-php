@@ -29,8 +29,7 @@ final class Qwen3ClientTest extends TestCase
     public function testCreatePostsCompactedBodyToCorrectPath(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_1"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1"}')]);
         $client = new Qwen3Client(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $task = $client->textToImage->create([
@@ -42,8 +41,7 @@ final class Qwen3ClientTest extends TestCase
             'enable_prompt_expansion' => true,
             'enable_safety_checker' => true,
             'negative_prompt' => 'sample',
-            'callback_url' => '',
-        ]);
+            'callback_url' => '']);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true, flags: JSON_THROW_ON_ERROR);
 
@@ -58,8 +56,7 @@ final class Qwen3ClientTest extends TestCase
     {
         $transport = new QueueHttpClient([
             new Response(200, [], '{"id":"task_1"}'),
-            new Response(200, [], '{"id":"task_1","status":"completed","images":[{"url":"https://file.runapi.ai/result"}],"generation_stage":"all_audios_ready","extra_field":"kept"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1","status":"completed","images":[{"url":"https://file.runapi.ai/result"}],"generation_stage":"all_audios_ready","extra_field":"kept","usage":{"cost":0.05}}')]);
         $client = new Qwen3Client(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $result = $client->textToImage->run([
@@ -71,8 +68,7 @@ final class Qwen3ClientTest extends TestCase
             'enable_prompt_expansion' => true,
             'enable_safety_checker' => true,
             'negative_prompt' => 'sample',
-            'seed' => 1,
-        ]);
+            'seed' => 1]);
 
         self::assertInstanceOf(CompletedImageTaskResponse::class, $result);
         self::assertSame('https://file.runapi.ai/result', $result->images[0]->url);
@@ -84,8 +80,7 @@ final class Qwen3ClientTest extends TestCase
     {
         $transport = new QueueHttpClient([
             new Response(200, [], '{"id":"task_1"}'),
-            new Response(200, [], '{"id":"task_1","status":"completed"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1","status":"completed","usage":{"cost":0.05}}')]);
         $client = new Qwen3Client(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $this->expectException(ValidationException::class);
@@ -100,36 +95,16 @@ final class Qwen3ClientTest extends TestCase
             'enable_prompt_expansion' => true,
             'enable_safety_checker' => true,
             'negative_prompt' => 'sample',
-            'seed' => 1,
-        ]);
+            'seed' => 1]);
     }
 
-    public function testRejectsInvalidContractEnum(): void
-    {
-        $client = new Qwen3Client(new ClientOptions(apiKey: 'k', httpClient: new QueueHttpClient([]), maxRetries: 0));
 
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('output_resolution must be one of the allowed values');
-
-        $client->textToImage->create([
-        'model' => 'qwen-3-pro-text-to-image',
-        'prompt' => 'A product render',
-        'aspect_ratio' => '1:1',
-        'output_format' => 'png',
-        'enable_prompt_expansion' => true,
-        'enable_safety_checker' => true,
-        'negative_prompt' => 'sample',
-        'seed' => 1,
-        'output_resolution' => 'not-valid',
-        ]);
-    }
 
 
     public function testSecondaryResourceUsesItsOwnPath(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_2"}'),
-        ]);
+            new Response(200, [], '{"id":"task_2"}')]);
         $client = new Qwen3Client(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $client->editImage->create([
@@ -142,8 +117,7 @@ final class Qwen3ClientTest extends TestCase
             'enable_prompt_expansion' => true,
             'enable_safety_checker' => true,
             'negative_prompt' => 'sample',
-            'seed' => 1,
-        ]);
+            'seed' => 1]);
 
         self::assertSame('/api/v1/qwen_3/edit_image', $transport->requests[0]->getUri()->getPath());
     }

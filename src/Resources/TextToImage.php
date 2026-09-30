@@ -10,7 +10,6 @@ use RunApi\Core\RequestOptions;
 use RunApi\Core\Resources\TypedConfiguredResource;
 use RunApi\Qwen3\Models\CompletedImageTaskResponse;
 use RunApi\Qwen3\Models\ImageTaskResponse;
-use RunApi\Qwen3\Types;
 
 /** Text to image operations for Qwen 3. */
 readonly class TextToImage extends TypedConfiguredResource
@@ -75,10 +74,8 @@ readonly class TextToImage extends TypedConfiguredResource
         return new self(
             $http,
             '/api/v1/qwen_3/text_to_image',
-            'qwen-3/text-to-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
-            Types::TEXT_TO_IMAGE_MODELS,
             'text-to-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
